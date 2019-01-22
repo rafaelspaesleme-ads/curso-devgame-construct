@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<c2eventsheet>
+    <!--All the 'name' attributes are ignored by Construct 2 - they are there for readability only.-->
+    <name>event_principal</name>
+    <events>
+        <variable constant="0" name="PLAYER_INICIO_X" sid="519181687293828" static="0" type="number">0</variable>
+        <variable constant="0" name="PLAYER_INICIO_Y" sid="250831434526594" static="0" type="number">0</variable>
+        <variable comment="Variavel da vida do jogador" constant="0" name="VIDA" sid="800083826120662" static="0" type="number">3</variable>
+        <variable comment="Variavel do tempo de jogo" constant="0" name="TEMPO" sid="927688926622588" static="0" type="number">30</variable>
+        <event-group description="Ações do sistema" sid="491956851933023" title="System">
+            <sub-events>
+                <comment>Quando a todo momento ele manda informações para atualizar a tela a todo momento</comment>
+                <event-block sid="645080446939464">
+                    <conditions>
+                        <condition id="-1" name="Every tick" sid="233281993303418" type="System" />
+                    </conditions>
+                    <actions>
+                        <action id="0" name="Set text" sid="604800689579620" type="txt_vidas">
+                            <param id="0" name="Text">&quot;VIDAS: &quot; &amp; VIDA</param>
+                        </action>
+                        <action id="0" name="Set text" sid="173116126717244" type="txt_tempo">
+                            <param id="0" name="Text">&quot;TEMPO: &quot; &amp; TEMPO</param>
+                        </action>
+                    </actions>
+                </event-block>
+                <comment>Quando a cada 1 segundo ele subtrai um do tempo. (Contagem regressiva do jogo)</comment>
+                <event-block sid="626671440852306">
+                    <conditions>
+                        <condition id="-6" name="Every X seconds" sid="393683376645524" type="System">
+                            <param id="0" name="Interval (seconds)">1.0</param>
+                        </condition>
+                    </conditions>
+                    <actions>
+                        <action id="-11" name="Subtract from" sid="274872288597383" type="System">
+                            <param id="0" name="Variable">TEMPO</param>
+                            <param id="1" name="Value">1</param>
+                        </action>
+                    </actions>
+                </event-block>
+                <comment>Se o tempo do jogo chegar a zero, ele vai reiniciar o jogo e vai perder uma vida.</comment>
+                <event-block sid="615507384578149">
+                    <conditions>
+                        <condition id="-14" name="Compare variable" sid="321961270565468" type="System">
+                            <param id="0" name="Variable">TEMPO</param>
+                            <param id="1" name="Comparison">3</param>
+                            <param id="2" name="Value">0</param>
+                        </condition>
+                    </conditions>
+                    <actions>
+                        <action id="-26" name="Restart layout" sid="239544153063084" type="System" />
+                        <action id="-9" name="Set value" sid="883867350033602" type="System">
+                            <param id="0" name="Variable">TEMPO</param>
+                            <param id="1" name="Value">30</param>
+                        </action>
+                        <action id="-11" name="Subtract from" sid="822386672736489" type="System">
+                            <param id="0" name="Variable">VIDA</param>
+                            <param id="1" name="Value">1</param>
+                        </action>
+                    </actions>
+                </event-block>
+                <comment>Quando iniciar o layout, salva a posição inicial do jogador</comment>
+                <event-block sid="800791413806056">
+                    <conditions>
+                        <condition id="-2" name="On start of layout" sid="340748784866243" type="System" />
+                    </conditions>
+                    <actions>
+                        <action id="-9" name="Set value" sid="566918918889924" type="System">
+                            <param id="0" name="Variable">PLAYER_INICIO_X</param>
+                            <param id="1" name="Value">obj_player.X</param>
+                        </action>
+                        <action id="-9" name="Set value" sid="132622520184337" type="System">
+                            <param id="0" name="Variable">PLAYER_INICIO_Y</param>
+                            <param id="1" name="Value">obj_player.Y</param>
+                        </action>
+                    </actions>
+                </event-block>
+            </sub-events>
+        </event-group>
+        <event-group description="Eventos relacionados ao jogador" sid="210425865748663" title="Player">
+            <sub-events>
+                <event-group description="Itens para o jogador pegar" sid="835601670102689" title="Items">
+                    <sub-events>
+                        <comment>Quando o player colidir com  objeto azul, e tiver menos de 5 vidas, ele vai ganhar mais uma vida</comment>
+                        <event-block sid="705469833454435">
+                            <conditions>
+                                <condition id="0" name="On collision with another object" sid="564816434188811" type="obj_player">
+                                    <param id="0" name="Object">item_vida</param>
+                                </condition>
+                                <condition id="-14" name="Compare variable" sid="791999886212252" type="System">
+                                    <param id="0" name="Variable">VIDA</param>
+                                    <param id="1" name="Comparison">2</param>
+                                    <param id="2" name="Value">5</param>
+                                </condition>
+                            </conditions>
+                            <actions>
+                                <action id="-10" name="Add to" sid="312202334378229" type="System">
+                                    <param id="0" name="Variable">VIDA</param>
+                                    <param id="1" name="Value">1</param>
+                                </action>
+                                <action id="-9" name="Destroy" sid="933463495271368" type="item_vida" />
+                            </actions>
+                        </event-block>
+                    </sub-events>
+                </event-group>
+                <event-group description="Interações do jogador com o inimigo" sid="748649298969477" title="Player with enemies">
+                    <sub-events>
+                        <comment>Quando colide com um inimigo, ele isca e perde uma vida</comment>
+                        <event-block sid="256957043198637">
+                            <conditions>
+                                <condition id="0" name="On collision with another object" sid="149902687569572" type="obj_player">
+                                    <param id="0" name="Object">obj_oponente_1</param>
+                                </condition>
+                                <condition behavior="Flash" id="0" inverted="1" name="Is flashing" sid="844106283744340" type="obj_player" />
+                            </conditions>
+                            <actions />
+                            <sub-events>
+                                <comment>Se o jogador pular em cima do inimigo, irá destrui-lo</comment>
+                                <event-block sid="216104038743249">
+                                    <conditions>
+                                        <condition id="-2" name="Compare Y" sid="128376102612617" type="obj_player">
+                                            <param id="0" name="Comparison">2</param>
+                                            <param id="1" name="Y co-ordinate">obj_oponente_1.Y -30</param>
+                                        </condition>
+                                    </conditions>
+                                    <actions>
+                                        <action id="-9" name="Destroy" sid="370797665046055" type="obj_oponente_1" />
+                                        <action behavior="Platform" id="9" name="Set vector Y" sid="936445928655689" type="obj_player">
+                                            <param id="0" name="Vector Y">-700</param>
+                                        </action>
+                                    </actions>
+                                </event-block>
+                                <comment>Se o jogador não estiver em cima do inimigo, ele perde uma vida</comment>
+                                <event-block sid="169238710441621">
+                                    <conditions>
+                                        <condition id="-22" name="Else" sid="618713275980986" type="System" />
+                                    </conditions>
+                                    <actions>
+                                        <action id="-11" name="Subtract from" sid="593144335500143" type="System">
+                                            <param id="0" name="Variable">VIDA</param>
+                                            <param id="1" name="Value">1</param>
+                                        </action>
+                                        <action behavior="Flash" id="0" name="Flash" sid="447153984101893" type="obj_player">
+                                            <param id="0" name="&apos;On&apos; time">0.1</param>
+                                            <param id="1" name="&apos;Off&apos; time">0.1</param>
+                                            <param id="2" name="Duration">1.0</param>
+                                        </action>
+                                    </actions>
+                                </event-block>
+                            </sub-events>
+                        </event-block>
+                    </sub-events>
+                </event-group>
+                <event-group description="Movimentos do jogador" sid="974751663394139" title="Keyboard">
+                    <sub-events>
+                        <comment>Simula o pulo do jogador</comment>
+                        <event-block sid="559447810189000">
+                            <conditions>
+                                <condition id="2" name="Key is down" sid="781475162781680" type="Keyboard">
+                                    <param id="0" name="Key">87</param>
+                                </condition>
+                            </conditions>
+                            <actions>
+                                <action behavior="Platform" id="7" name="Simulate control" sid="950683413328072" type="obj_player">
+                                    <param id="0" name="Control">2</param>
+                                </action>
+                            </actions>
+                        </event-block>
+                        <comment>Move para a direita e desespelha o jogador</comment>
+                        <event-block sid="766265542194242">
+                            <conditions>
+                                <condition id="2" name="Key is down" sid="429378912261284" type="Keyboard">
+                                    <param id="0" name="Key">68</param>
+                                </condition>
+                            </conditions>
+                            <actions>
+                                <action id="7" name="Set mirrored" sid="561958094106802" type="obj_player">
+                                    <param id="0" name="State">1</param>
+                                </action>
+                                <action behavior="Platform" id="7" name="Simulate control" sid="469225695608145" type="obj_player">
+                                    <param id="0" name="Control">1</param>
+                                </action>
+                            </actions>
+                        </event-block>
+                        <comment>Move para a esquerda e espelha o jogador</comment>
+                        <event-block sid="403860618949250">
+                            <conditions>
+                                <condition id="2" name="Key is down" sid="656813424313940" type="Keyboard">
+                                    <param id="0" name="Key">65</param>
+                                </condition>
+                            </conditions>
+                            <actions>
+                                <action id="7" name="Set mirrored" sid="902643585808469" type="obj_player">
+                                    <param id="0" name="State">0</param>
+                                </action>
+                                <action behavior="Platform" id="7" name="Simulate control" sid="516283240962522" type="obj_player">
+                                    <param id="0" name="Control">0</param>
+                                </action>
+                            </actions>
+                        </event-block>
+                        <comment>Desespelha o jogador quando move o direcional direito</comment>
+                        <event-block sid="622448651054688">
+                            <conditions>
+                                <condition id="2" name="Key is down" sid="798202193775783" type="Keyboard">
+                                    <param id="0" name="Key">39</param>
+                                </condition>
+                            </conditions>
+                            <actions>
+                                <action id="7" name="Set mirrored" sid="184896068029029" type="obj_player">
+                                    <param id="0" name="State">1</param>
+                                </action>
+                            </actions>
+                        </event-block>
+                        <comment>Espelha o jogador quando move o direcional esquerdo</comment>
+                        <event-block sid="993107638911125">
+                            <conditions>
+                                <condition id="2" name="Key is down" sid="764378679448224" type="Keyboard">
+                                    <param id="0" name="Key">37</param>
+                                </condition>
+                            </conditions>
+                            <actions>
+                                <action id="7" name="Set mirrored" sid="412507611383057" type="obj_player">
+                                    <param id="0" name="State">0</param>
+                                </action>
+                            </actions>
+                        </event-block>
+                    </sub-events>
+                </event-group>
+                <comment>Quando o jogador sai do layout, reposiciona ele e subtrai uma vida. (simula a morte do jogador e reinicia o jogo do ponto inicial)</comment>
+                <event-block sid="876773875468134">
+                    <conditions>
+                        <condition id="-2" name="Compare Y" sid="503303132055082" type="obj_player">
+                            <param id="0" name="Comparison">4</param>
+                            <param id="1" name="Y co-ordinate">LayoutHeight</param>
+                        </condition>
+                    </conditions>
+                    <actions>
+                        <action id="0" name="Call function" sid="223805843459358" type="Function">
+                            <param id="0" name="Name">&quot;player_morreu&quot;</param>
+                            <param id="1" name="Parameter {n}"></param>
+                        </action>
+                    </actions>
+                </event-block>
+                <comment>Quando colide com a porta, passa de fase (simula o momento em que o jogador chega na porta e passa para a proxima fase)</comment>
+                <event-block sid="615237219297172">
+                    <conditions>
+                        <condition id="0" name="On collision with another object" sid="760514037264034" type="obj_player">
+                            <param id="0" name="Object">obj_porta</param>
+                        </condition>
+                    </conditions>
+                    <actions>
+                        <action id="-43" name="Go to next/previous layout" sid="846853937431198" type="System">
+                            <param id="0" name="Which">0</param>
+                        </action>
+                    </actions>
+                </event-block>
+                <comment>Quando as vidas chegam a zero ele vai para o layout de game over (simula o momento que o jogador perde todas as vidas e da game over)</comment>
+                <event-block sid="827467506591134">
+                    <conditions>
+                        <condition id="-14" name="Compare variable" sid="246747819115080" type="System">
+                            <param id="0" name="Variable">VIDA</param>
+                            <param id="1" name="Comparison">3</param>
+                            <param id="2" name="Value">0</param>
+                        </condition>
+                    </conditions>
+                    <actions>
+                        <action id="-2" name="Go to layout" sid="955284582452323" type="System">
+                            <param id="0" name="Layout">game_over</param>
+                        </action>
+                    </actions>
+                </event-block>
+            </sub-events>
+        </event-group>
+        <event-group description="Funções do jogo" sid="289123224818899" title="Functions">
+            <sub-events>
+                <comment>Função para perder 1 vida e voltar a posição inicial</comment>
+                <event-block sid="182521636147369">
+                    <conditions>
+                        <condition id="0" name="On function" sid="812124057245512" type="Function">
+                            <param id="0" name="Name">&quot;player_morreu&quot;</param>
+                        </condition>
+                    </conditions>
+                    <actions>
+                        <action id="-11" name="Subtract from" sid="379584604161645" type="System">
+                            <param id="0" name="Variable">VIDA</param>
+                            <param id="1" name="Value">1</param>
+                        </action>
+                        <action id="-3" name="Set position" sid="973071598609980" type="obj_player">
+                            <param id="0" name="X">PLAYER_INICIO_X</param>
+                            <param id="1" name="Y">PLAYER_INICIO_Y</param>
+                        </action>
+                        <action id="-9" name="Set value" sid="703097955135426" type="System">
+                            <param id="0" name="Variable">TEMPO</param>
+                            <param id="1" name="Value">30</param>
+                        </action>
+                    </actions>
+                </event-block>
+            </sub-events>
+        </event-group>
+    </events>
+</c2eventsheet>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<c2eventsheet>
+    <!--All the 'name' attributes are ignored by Construct 2 - they are there for readability only.-->
+    <name>event_game_over</name>
+    <events>
+        <event-block sid="790561755123802">
+            <conditions>
+                <condition id="0" name="On any touch start" sid="981416916995820" type="Touch" />
+            </conditions>
+            <actions>
+                <action id="-2" name="Go to layout" sid="727567036539275" type="System">
+                    <param id="0" name="Layout">menu</param>
+                </action>
+                <action id="-21" name="Reset global variables" sid="174457833117834" type="System" />
+            </actions>
+        </event-block>
+    </events>
+</c2eventsheet>
